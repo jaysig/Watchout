@@ -19,8 +19,9 @@
     height: 400, //Y
     width: 600, //X
     nEmemies: 20
-  }
-  var enemyArray = enemyGenerator(580,390);
+  };
+
+  var enemyArray = enemyGenerator(gameOptions.width - 20,gameOptions.height - 10);
   var gameBoard = d3.select('.container').append('svg')
                   .attr('width', gameOptions.width)
                   .attr('height', gameOptions.height);
@@ -29,7 +30,6 @@
                 .data(enemyArray)
                 .enter()
                 .append('circle');
-  console.log(enemyArray);
   var enemyAttributes = enemies
                         .attr('class','enemy')
                         .attr('cx', function(d){return d[0];})
@@ -37,7 +37,7 @@
                         .attr('r', 10)
                         .style('fill','grey')
                         .transition().each('end', function(){
-                        	moveEnemies();
+                        	moveEnemies(); //Figure out each / end
                         });
 //make the enemies move randomly every second
 	//setTimeout every second - run a move function
@@ -54,5 +54,23 @@
 
 
 //make a player that is draggable
+var drag = d3.behavior.drag()
+             .on('drag', function() { player.attr('cx', d3.event.x)
+                                            .attr('cy', d3.event.y); });
+var player = gameBoard.selectAll('circle.player')
+              .data([{ x: (gameOptions.width / 2), y: (gameOptions.height / 2)}])
+              .enter()
+              .append('svg:circle');
+
+var playerAttributes = player
+                      .attr('class','player')
+                      .attr('cx', function(d) { return d.x; })
+                      .attr('cy', function(d) { return d.y; })
+                      .attr('r', 10)
+                      .style('fill','red')
+                      .call(drag);
+
+
 //detect collisions
+
 //keep track of score
