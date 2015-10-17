@@ -1,6 +1,15 @@
 // setup gameboard
 	//difine proportions of gameboard
 	//setup count variable
+var score = 0;
+var highScore = 0;
+var collisionCount = 0;
+
+var updateScore = function(){
+  d3.select('.scoreboard .current span').text(score);
+  d3.select('.scoreboard .high span').text(highScore);
+  d3.select('.scoreboard .collisions span').text(collisionCount);
+};
 
 //draw enemies
   //data set of random starting positions
@@ -73,4 +82,12 @@ var playerAttributes = player
 
 //detect collisions
 
+
 //keep track of score
+var scoreTicker = function(){
+  score = score + 1;
+  highScore = Math.max(score, highScore);
+  updateScore();
+};
+
+setInterval(scoreTicker, 100);
