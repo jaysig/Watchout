@@ -27,7 +27,8 @@ var updateScore = function(){
   var gameOptions = {
     height: 400, //Y
     width: 600, //X
-    nEmemies: 20
+    nEmemies: 20,
+    r: 10
   };
 
   var enemyArray = enemyGenerator(gameOptions.width - 20,gameOptions.height - 10);
@@ -43,7 +44,7 @@ var updateScore = function(){
                         .attr('class','enemy')
                         .attr('cx', function(d){return d[0];})
                         .attr('cy', function(d){return d[1];})
-                        .attr('r', 10)
+                        .attr('r', gameOptions.r)
                         .style('fill','grey')
                         .transition().each('end', function(){
                         	moveEnemies(); //Figure out each / end
@@ -75,12 +76,32 @@ var playerAttributes = player
                       .attr('class','player')
                       .attr('cx', function(d) { return d.x; })
                       .attr('cy', function(d) { return d.y; })
-                      .attr('r', 10)
+                      .attr('r', gameOptions.r)
                       .style('fill','red')
                       .call(drag);
 
 
 //detect collisions
+var detectCollision = function(){
+
+  var collision = false;
+
+  enemies.each(function(){
+    var cx = this.offsetLeft + gameOptions.r;
+    var cy = this.offsetTop + gameOptions.r;
+    var x = cx - player.attr('cx');
+    var y = cx - player.attr('cy');
+    if( Math.sqrt(x*x + y*y) < gameOptions.r*2){
+      console.log('test');
+      collision = true;
+    }
+  });
+  if(collision){
+    score = 0;
+    collisionCount = collisionCount + 1;
+  }
+};
+d3.timer(detectCollision);
 
 
 //keep track of score
